@@ -1,0 +1,23 @@
+```{python}
+import pandas as pd
+import plotly.express as px
+pd.set_option('display.max_columns', None)
+import os
+os.chdir('..')
+
+```
+```{python}
+df = pd.read_csv(r"data\raw\MiningProcess_Flotation_Plant_Database.csv",decimal=",")
+
+df_1 = df.copy()
+df_1["date"] = pd.to_datetime(df_1["date"])
+df_1['% Silica Concentrate'] = df_1['% Silica Concentrate'].round(2)
+#df_1 = df_1.drop_duplicates(["% Silica Concentrate"])
+df_1 = df_1.drop_duplicates(["% Iron Feed","% Silica Feed"])
+
+
+```
+```{python}
+fig = px.line(df_1,x='date', y="% Silica Concentrate")
+fig.show()
+```
