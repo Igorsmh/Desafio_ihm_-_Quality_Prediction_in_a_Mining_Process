@@ -1,0 +1,28 @@
+A meta é prever a última coluna, que é a % de sílica no concentrado de minério de ferro.
+
+A primeira coluna mostra a hora e o intervalo de datas (de março de 2017 a setembro de 2017).
+Algumas colunas foram amostradas a cada 20 segundos. Outros foram amostrados de hora em hora.
+A segunda e terceira colunas são medidas de qualidade da polpa de minério de ferro logo antes de ser alimentada na planta de flotação.
+Da coluna 4 até a coluna 8 estão as variáveis ​​mais importantes que impactam na qualidade do minério ao final do processo.
+Da coluna 9 até a coluna 22, podemos ver os dados do processo (nível e fluxo de ar dentro das colunas de flotação), que também impactam na qualidade do minério.
+As duas últimas colunas são a medição final da qualidade da polpa de minério de ferro do laboratório.
+
+
+
+
+Target is to predict the last column, which is the % of silica in the iron ore concentrate.
+
+The first column shows time and date range (from march of 2017 until september of 2017).
+Some columns were sampled every 20 second. Others were sampled on a hourly base.
+The second and third columns are quality measures of the iron ore pulp right before it is fed into the flotation plant.
+Column 4 until column 8 are the most important variables that impact in the ore quality in the end of the process.
+From column 9 until column 22, we can see process data (level and air flow inside the flotation columns), which also impact in ore quality.
+The last two columns are the final iron ore pulp quality measurement from the lab.
+
+
+
+
+
+Coluna 2 e 3 mudam a cada hora coluna 8 (?)
+Coluna 4 a 7 mudam a cada 20 min
+

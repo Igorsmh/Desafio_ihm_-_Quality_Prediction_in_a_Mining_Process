@@ -1,0 +1,49 @@
+Dicionário de Dados:
+
+date: Data e hora da medição, que cobre o período de 10 de Março de 2017 à 9 de Setembro de 2017. Algumas variáveis são amostradas a cada 20 segundos, enquanto outras são amostradas a cada 1 hora.
+
+% Iron Feed: Percentual de Ferro presente no minério de ferro, antes de entrar na planta de flotação.
+
+% Silica Feed: Percentual de Sílica (impureza) presente no minério de ferro, antes de entrar na planta de flotação.
+
+Starch Flow: Fluxo do reagente Amido (m³/h).
+
+Amina Flow: Fluxo do reagente Amina (m³/h).
+
+Ore Pulp Flow: Fluxo da polpa de Minério (t/h).
+
+Ore Pulp pH: PH da polpa de Minério (0 a 14).
+
+Ore Pulp Density: Densidade da polpa de Minério (1 a 3 kg/cm³).
+
+Flotation Column 01 Air Flow: Fluxo de ar que vai para a célula de flotação (Nm³/h).
+
+Flotation Column 02 Air Flow: Fluxo de ar que vai para a célula de flotação (Nm³/h).
+
+Flotation Column 03 Air Flow: Fluxo de ar que vai para a célula de flotação (Nm³/h).
+
+Flotation Column 04 Air Flow: Fluxo de ar que vai para a célula de flotação (Nm³/h).
+
+Flotation Column 05 Air Flow: Fluxo de ar que vai para a célula de flotação (Nm³/h).
+
+Flotation Column 06 Air Flow: Fluxo de ar que vai para a célula de flotação (Nm³/h).
+
+Flotation Column 07 Air Flow: Fluxo de ar que vai para a célula de flotação (Nm³/h).
+
+Flotation Column 01 Level: Nível de Espuma na célula de flotação (mm).
+
+Flotation Column 02 Level: Nível de Espuma na célula de flotação (mm).
+
+Flotation Column 03 Level: Nível de Espuma na célula de flotação (mm).
+
+Flotation Column 04 Level: Nível de Espuma na célula de flotação (mm).
+
+Flotation Column 05 Level: Nível de Espuma na célula de flotação (mm).
+
+Flotation Column 06 Level: Nível de Espuma na célula de flotação (mm).
+
+Flotation Column 07 Level: Nível de Espuma na célula de flotação (mm).
+
+% Iron Concentrate: Percentual de Ferro presente no minério de ferro, após o processo de flotação (medição de laboratório).
+
+% Silica Concentrate: Percentual de Sílica (impureza) presente no minério de ferro, após o processo de flotação (medição de laboratório).
