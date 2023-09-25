@@ -1,0 +1,235 @@
+```{python}
+
+# Realizando os imports
+
+import pandas as pd
+import numpy as np
+from matplotlib import pyplot as plt
+import os
+os.chdir("..")
+
+```
+
+```{python}
+#Chamando os dados
+
+df = pd.read_csv(r"data\interim\MiningProcess_Flotation_Plant_Database.csv",parse_dates=['date'])
+
+```
+
+```{python}
+
+# Modificando a frequencia para hora a hora
+df = df.set_index('date').resample('H').first()
+
+# Divisão para o treino 
+train = df.loc[df.index < '2017-07-24 01:00:00' ]
+# Divisão para o teste 
+test = df.loc[df.index >= '2017-08-20 01:00:00' ]
+
+```
+
+
+```{python}
+# arrumar o timestamp
+
+# Resample data to hourly basis
+#train = train.set_index('date').resample('H').first()
+
+# Somente remover os valores nan ainda geraria uma descontinuidade no dataset
+#df = df.dropna()
+#observando os valores com nan
+train[train.isnull().any(axis=1)]
+
+# Usando somente apartir de tempos continuos 
+train = train['2017-03-29 12:00:00':]
+
+
+```
+
+
+```{python}
+from statsmodels.tsa.seasonal import seasonal_decompose
+
+# decomposição do gráfico para observar tendencia, sazonalidade e residuos
+resultado = seasonal_decompose(train['% Silica Concentrate'])
+
+# gerando imagem
+fig, axes = plt.subplots(4, 1, figsize=(20, 10))
+
+resultado.observed.plot(ax=axes[0])
+resultado.trend.plot(ax=axes[1])
+resultado.seasonal.plot(ax=axes[2])
+resultado.resid.plot(ax=axes[3])
+
+plt.show()
+```
+
+```{python}
+from statsmodels.tsa.stattools import adfuller
+# Realizando o teste para saber se é estacionaria
+
+
+result=adfuller(train['% Silica Concentrate'].dropna())
+print(f'Teste ADF: {result[0]}')
+print(f'p-valor: {result[1]}')
+
+# Podemos rejeitar a hipotese nula ( a raiz unitaria esta presente na serie ) dessa forma ela é estacionaria 
+```
+
+
+# Treinando modelo SARIMAX seasonal=True
+
+```{python}
+from pmdarima import auto_arima
+from statsmodels.tsa.arima.model import ARIMA
+
+# Criando o modelo, indicando tendencia de sazonalidade
+
+fit_arima = auto_arima(train['% Silica Concentrate'], d=1, start_p=1, start_q=1,Max_p=3,max_q=3,
+                        seasonal=True,
+                        m=6,
+                        D=1,
+                        start_P=1,
+                        start_Q=1,
+                        max_P=2,
+                        max_Q=2,
+                        information_criterion='aic',
+                        trace=True,
+                        error_action='ignore',
+                        stepwise=True)
+
+
+```
+
+
+```{python}
+# seasonal = True
+# Treinando omodelo com os melhores parametros vindos do autoarima
+from statsmodels.tsa.statespace.sarimax import SARIMAX
+
+model = SARIMAX(train['% Silica Concentrate'],order=(4,1,0), seasonal_order=(2, 1, 0, 6))
+resultado_sarimax = model.fit()
+
+```
+
+```{python}
+# Observando os resultados
+resultado_sarimax.summary()
+```
+
+```{python}
+# Prevendo os valores futuros
+
+forecast = resultado_sarimax.get_forecast(steps=1150)
+forecast_medio = forecast.predicted_mean
+
+```
+
+```{python}
+# Pegando as datas correspondentes a cada 
+
+datas_forecast = np.asarray(forecast_medio.index)
+datas = np.asarray(test.index)
+
+```
+
+```{python}
+# intervalo de confianca
+
+intervalo_confianca_forecast = forecast.conf_int()
+limites_abaixo = intervalo_confianca_forecast.iloc[:,0]
+limites_acima = intervalo_confianca_forecast.iloc[:,1]
+
+limites_abaixo[0], limites_acima[2]
+
+```
+
+```{python}
+plt.figure(figsize=(10,6))
+plt.plot (datas_forecast, forecast_medio.values, color="red" ,label='prediction')
+#plt.fill_between(datas_forecast, limites_abaixo, limites_acima, color='red')
+plt.plot (datas, test['% Silica Concentrate'].values, label='test')
+plt.legend()
+plt.show()
+
+```
+
+```{python}
+from sklearn.metrics import mean_squared_error
+from math import sqrt
+
+rmse_sarima = sqrt(mean_squared_error(test['% Silica Concentrate'][:1100].values,forecast_medio.values))
+print (rmse_sarima)
+
+```
+
+
+
+# Treinando modelo SARIMAX sem season
+
+```{python}
+from pmdarima import auto_arima
+from statsmodels.tsa.arima.model import ARIMA
+
+fit_arima = auto_arima(train['% Silica Concentrate'], d=1, start_p=1, start_q=1,Max_p=3,max_q=3,
+                        seasonal=False,
+                        m=6,
+                        D=1,
+                        start_P=1,
+                        start_Q=1,
+                        max_P=2,
+                        max_Q=2,
+                        information_criterion='aic',
+                        trace=True,
+                        error_action='ignore',
+                        stepwise=True)
+
+
+```
+
+```{python}
+from statsmodels.tsa.statespace.sarimax import SARIMAX
+# seasonal = false
+model=SARIMAX(train['% Silica Concentrate'],order=(4,1,3), seasonal_order=(0, 0, 0, 0))
+resultado_sarimax = model.fit()
+```
+
+
+```{python}
+resultado_sarimax.summary()
+```
+
+
+```{python}
+forecast = resultado_sarimax.get_forecast(steps=1150)
+forecast_medio = forecast.predicted_mean
+
+```
+
+```{python}
+datas_forecast = np.asarray(forecast_medio.index)
+datas = np.asarray(test.index)
+
+```
+
+```{python}
+# intervalo de confianca
+
+intervalo_confianca_forecast = forecast.conf_int()
+limites_abaixo = intervalo_confianca_forecast.iloc[:,0]
+limites_acima = intervalo_confianca_forecast.iloc[:,1]
+
+limites_abaixo[0], limites_acima[2]
+
+```
+
+```{python}
+plt.figure(figsize=(10,6))
+plt.plot (datas_forecast, forecast_medio.values, color="red" ,label='prediction')
+#plt.fill_between(datas_forecast, limites_abaixo, limites_acima, color='red')
+plt.plot (datas, test['% Silica Concentrate'].values, label='test')
+plt.legend()
+plt.show()
+
+```
