@@ -68,7 +68,7 @@ reg.fit(X_train, y_train,
 ```
 
 ```{python}
-
+# Observando as features que foram mais relevantes
 fi = pd.DataFrame(data=reg.feature_importances_,
              index=reg.feature_names_in_,
              columns=['importancia'])
@@ -78,10 +78,11 @@ plt.show()
 ```
 
 ```{python}
+#criando uma nova coluna com os valores previstos
 test['% silica_prevista'] = reg.predict(X_test)
 ```
 ```{python}
-
+# Gerando o gráfico com as previsões
 import plotly.graph_objects as go
 
 test['% silica_prevista'] = reg.predict(X_test)
