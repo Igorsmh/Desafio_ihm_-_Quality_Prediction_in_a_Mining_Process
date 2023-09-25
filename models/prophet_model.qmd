@@ -1,0 +1,59 @@
+```{python}
+
+# Realizando os imports
+import pandas as pd
+from neuralprophet import NeuralProphet
+from matplotlib import pyplot as plt
+import os
+os.chdir("..")
+from src.features.build_features_xgboost\
+     import generate_time , generate_dataset_train, generate_lag
+
+```
+
+```{python}
+# Carregando o dataset
+df = pd.read_csv(r"data\interim\MiningProcess_Flotation_Plant_Database.csv")
+
+```
+
+```{python}
+# Dividindo o dataset como é exigido pelo NeuralProphet
+dataset = df[['date','% Silica Concentrate']]
+dataset.columns=['ds','y']
+```
+
+
+```{python}
+"""
+     Dividindo a base, de forma que tenhamos,
+        aprox 80% para treino e 20% para teste.
+
+    Para não ocorrer overfiting entre a semana de mudança,
+        aumentei aproximadamente 20 linhas da amostra.
+"""
+
+# Divisão para o treino 
+train = dataset.loc[df['date'] < '2017-07-24 01:00:00' ]
+# Divisão para o teste 
+test = dataset.loc[df['date'] >= '2017-08-20 01:00:00' ]
+
+train['ds'] = train['ds'].drop_duplicates()
+train = train.dropna()
+```
+
+```{python}
+# treinando o modelo e passando o test
+model = NeuralProphet()
+metric_train = model.fit(train,freq='H',epochs=2000)
+medtric_test = model.test(test)
+```
+
+```{python}
+# Prevendo os dados
+future = medtric_test.make_future_dataframe(test, periods=300)
+forecast = medtric_test.predict(future)
+forecast.head()
+
+```
+

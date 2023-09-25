@@ -1,0 +1,112 @@
+```{python}
+#imports
+import pandas as pd
+import xgboost as xgb
+from sklearn.metrics import mean_squared_error
+import numpy as np
+import matplotlib.pyplot as plt
+import os
+os.chdir("..")
+from src.features.build_features_xgboost\
+     import generate_time , generate_dataset_train, generate_lag
+
+```
+```{python}
+# Carregando o dataset
+df = pd.read_csv(r"data\interim\MiningProcess_Flotation_Plant_Database.csv")
+df = df.set_index('date')
+
+"""
+     Dividindo a base, de forma que tenhamos,
+        aprox 80% para treino e 20% para teste.
+
+    Para não ocorrer overfiting entre a semana de mudança,
+        aumentei aproximadamente 20 linhas da amostra.
+"""
+
+# Divisão para o treino 
+train = df.loc[df.index < '2017-07-24 01:00:00' ]
+# Divisão para o teste 
+test = df.loc[df.index >= '2017-08-20 01:00:00' ]
+```
+```{python}
+# Realizando um tratamento na base de treino 
+train = generate_dataset_train(train)
+# Criando novas features no treino 
+train = generate_time(train)
+train = generate_lag(train)
+# Criando novas features no teste
+test = generate_time(test)
+test = generate_lag(test)
+
+```
+
+```{python}
+# Definindo features que serão utilizadas no modelo e qual a target.
+
+X_train = train.drop(["% Iron Concentrate","% Silica Concentrate"],axis=1)
+y_train = train["% Silica Concentrate"]
+
+X_test = test.drop(["% Iron Concentrate","% Silica Concentrate"],axis=1)
+y_test = test["% Silica Concentrate"]
+```
+```{python}
+# Usando xGBoost
+reg = xgb.XGBRegressor(base_score=0.5, booster='gbtree',    
+                       n_estimators=1000,
+                       early_stopping_rounds=50,
+                       objective='reg:linear',
+                       max_depth=3,
+                       learning_rate=0.01)
+```
+```{python}
+# Treinando o modelo
+reg.fit(X_train, y_train,
+        eval_set=[(X_train, y_train), (X_test, y_test)],
+        verbose=100)
+
+```
+
+```{python}
+
+fi = pd.DataFrame(data=reg.feature_importances_,
+             index=reg.feature_names_in_,
+             columns=['importancia'])
+fi.sort_values('importancia').plot(kind='barh', title='Importância das Features')
+plt.show()
+
+```
+
+```{python}
+test['% silica_prevista'] = reg.predict(X_test)
+```
+```{python}
+
+import plotly.graph_objects as go
+
+test['% silica_prevista'] = reg.predict(X_test)
+
+fig = go.Figure()
+# série de dados "Dados Reais"
+fig.add_trace(go.Scatter(x=df.index, y=df['% Silica Concentrate'], mode='lines', name='Dados Reais'))
+# série de dados "Previsões"
+fig.add_trace(go.Scatter(x=test.index, y=test['% silica_prevista'], mode='markers', name='Previsões',opacity=0.5))
+
+# Personalizando layout do gráfico
+fig.update_layout(
+    title='Dados Reais vs Previsões',
+    xaxis=dict(title='Data e Hora'),
+    yaxis=dict(title='% Silica Concentrate'),
+    xaxis_tickangle=45
+)
+
+# Exibindo o gráfico
+fig.show()
+
+```
+
+```{python}
+# Exibindo o a raiz do erro quadratico 
+
+score = np.sqrt(mean_squared_error(test['% Silica Concentrate'], test['% silica_prevista']))
+print(f'RMSE Score no teste: {score:0.2f}')
