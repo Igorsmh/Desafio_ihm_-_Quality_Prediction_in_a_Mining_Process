@@ -13,11 +13,43 @@ df_1 = df.copy()
 df_1["date"] = pd.to_datetime(df_1["date"])
 df_1['% Silica Concentrate'] = df_1['% Silica Concentrate'].round(2)
 #df_1 = df_1.drop_duplicates(["% Silica Concentrate"])
-df_1 = df_1.drop_duplicates(["% Iron Feed","% Silica Feed"])
-
+#df_1 = df_1.drop_duplicates(["% Iron Feed","% Silica Feed"])
+df_1 = df_1.set_index('date')
 
 ```
 ```{python}
 fig = px.line(df_1,x='date', y="% Silica Concentrate")
 fig.show()
+```
+
+
+```{python}
+df_aux = df[['% Silica Feed','Ore Pulp pH','Ore Pulp Density','% Silica Concentrate']]
+df_aux.plot()
+```
+
+# Valores Normalizados
+```{python}
+
+from sklearn.preprocessing import MinMaxScaler
+
+# Inicialize o objeto MinMaxScaler
+scaler = MinMaxScaler()
+
+# Ajuste e transforme os dados
+df_normalized = scaler.fit_transform(df_1)
+
+# Crie um novo DataFrame com os dados normalizados
+df_normalized = pd.DataFrame(df_normalized, columns=df_1.columns)
+
+```
+
+```{python}
+df_normalized_aux = df_normalized[['% Silica Feed','Ore Pulp pH','Ore Pulp Density','% Silica Concentrate']]
+df_normalized_aux.plot(figsize=(10,8))
+```
+
+```{python}
+df_normalized_aux = df_normalized[['% Silica Feed','% Silica Concentrate']]
+df_normalized_aux.plot(figsize=(20,6))
 ```
