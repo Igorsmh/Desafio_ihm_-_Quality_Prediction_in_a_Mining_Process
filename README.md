@@ -1,9 +1,39 @@
-Desafio ihm - Quality Prediction in a Mining Process
-==============================
+# Projeto de Mineração de Dados em Planta de Flotação
+Este é um projeto de mineração de dados que visa prever a quantidade de impureza (silica) no concentrado de minério de ferro em uma planta de flotação. A capacidade de prever a quantidade de impureza em tempo real é essencial para os engenheiros da planta, pois permite que eles tomem medidas corretivas antecipadas, o que pode melhorar a qualidade do minério e reduzir o impacto ambiental ao reduzir o desperdício de minério.
 
-Desafio proposto pela ihm para vaga de jr
+# Objetivo
+O principal objetivo deste projeto é desenvolver um modelo de aprendizado de máquina capaz de prever a porcentagem de sílica no concentrado de minério de ferro com base nos dados fornecidos. Isso permitirá que a equipe de engenheiros tome ações proativas para melhorar a qualidade do minério e reduzir o desperdício.
 
-Project Organization
+# Conjunto de Dados
+
+O conjunto de dados utilizado neste projeto está disponível aqui: https://www.kaggle.com/datasets/edumagalhaes/quality-prediction-in-a-mining-process.
+
+# Visão Geral do Conjunto de Dados
+O conjunto de dados consiste em várias colunas que representam diferentes variáveis relacionadas ao processo de flotação na planta. Aqui está uma breve descrição das colunas principais:
+Date: Data e hora do registro.
+
+- % Iron Feed: Porcentagem de ferro no minério de alimentação antes do processo de flotação.
+
+- % Silica Feed: Porcentagem de sílica no minério de alimentação antes do processo de flotação.
+
+- Starch Flow: Fluxo de amido no processo de flotação.
+
+- Amina Flow: Fluxo de amina no processo de flotação.
+
+- Ore Pulp Flow: Fluxo de polpa de minério no processo de flotação.
+
+- Ore Pulp pH: pH da polpa de minério no processo de flotação.
+
+- Ore Pulp Density: Densidade da polpa de minério no processo de flotação.
+
+- Flotation Column 01- 07 Air Flow: Fluxo de ar na coluna de flotação 01 - 07
+
+- Flotation Column 01 - 07 Level: Nível na coluna de flotação 01 - 07.
+
+- % Iron Concentrate: Porcentagem de ferro no concentrado de minério após o processo de flotação.
+
+- % Silica Concentrate: Porcentagem de sílica no concentrado de minério após o processo de flotação.
+# Project Organization
 ------------
 
     ├── LICENSE
@@ -48,10 +78,7 @@ Project Organization
     │   │
     │   └── visualization  <- Scripts to create exploratory and results oriented visualizations
     │       └── visualize.py
-    │
-    └── tox.ini            <- tox file with settings for running tox; see tox.readthedocs.io
 
 
---------
 
-<p><small>Project based on the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>. #cookiecutterdatascience</small></p>
+Agradeço a EDUARDO MAGALHÃES OLIVEIRA  envolvido na coleta e disponibilização do conjunto de dados.
