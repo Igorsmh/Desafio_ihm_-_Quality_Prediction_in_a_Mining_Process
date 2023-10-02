@@ -12,6 +12,7 @@ O conjunto de dados utilizado neste projeto está disponível aqui: https://www.
 O conjunto de dados consiste em várias colunas que representam diferentes variáveis relacionadas ao processo de flotação na planta. Aqui está uma breve descrição das colunas principais:
 Date: Data e hora do registro.
 
+- Date: Data e hora do registro.
 - % Iron Feed: Porcentagem de ferro no minério de alimentação antes do processo de flotação.
 
 - % Silica Feed: Porcentagem de sílica no minério de alimentação antes do processo de flotação.
